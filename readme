@@ -1,0 +1,175 @@
+# 📚 Object-Oriented Stack Design Using C++ Templates
+
+**A generic, menu-driven stack in C++, built from a single class template.**
+
+One `stack<type>` class handles `int`, `char`, `float`, `double` and `string` data, with push, pop and display operations and overflow/underflow detection.
+
+[![Language](https://img.shields.io/badge/language-C++-00599C?style=for-the-badge&logo=cplusplus&logoColor=white)](https://isocpp.org/)
+[![Status](https://img.shields.io/badge/status-active-16a34a?style=for-the-badge)](#)
+[![PRs](https://img.shields.io/badge/PRs-welcome-4f46e5?style=for-the-badge)](#)
+
+---
+
+## ✨ Features
+
+| Feature | Description |
+| --- | --- |
+| 🧩 **Generic stack** | One `template<class type>` class reused for every data type |
+| ➕ **Push** | Adds an element on top; reports `stack overflow` when full |
+| ➖ **Pop** | Removes the top element; reports `stack underflow` when empty |
+| 👀 **Display** | Prints all elements from bottom to top, or `stack is empty` |
+| 🗂️ **Five data types** | `int`, `char`, `float`, `double`, `string` |
+| 🔁 **New or previous stack** | Start fresh or continue with the stack as you left it |
+| 🖥️ **Console menu** | Interactive, menu-driven interface |
+
+---
+
+## 🏗️ Architecture
+
+`main()` shows the type menu and calls one handler function per data type. Each handler runs its own push/pop/display menu on a global `stack<type>` object, so the stack keeps its contents when you leave and re-enter.
+
+```mermaid
+flowchart TD
+    user(("User")) --> main["main()<br/>type menu"]
+
+    main --> int_stack["int_stack()"]
+    main --> char_stack["char_stack()"]
+    main --> float_stack["float_stack()"]
+    main --> double_stack["double_stack()"]
+    main --> string_stack["string_stack()"]
+
+    int_stack --> si["stack&lt;int&gt;"]
+    char_stack --> sc["stack&lt;char&gt;"]
+    float_stack --> sf["stack&lt;float&gt;"]
+    double_stack --> sd["stack&lt;double&gt;"]
+    string_stack --> ss["stack&lt;string&gt;"]
+
+    si & sc & sf & sd & ss --> ops["push · pop · display"]
+
+    classDef entry fill:#dbeafe,stroke:#2563eb,color:#172554
+    classDef handler fill:#fef3c7,stroke:#d97706,color:#78350f
+    classDef tmpl fill:#dcfce7,stroke:#16a34a,color:#14532d
+    class user,main entry
+    class int_stack,char_stack,float_stack,double_stack,string_stack handler
+    class si,sc,sf,sd,ss,ops tmpl
+```
+
+### The class template
+
+```cpp
+#define MAX_SIZE 5
+
+template<class type>
+class stack
+{
+    type array[MAX_SIZE];   // fixed-size storage
+    int TOP;                // index of the top element, -1 when empty
+public:
+    stack();                // sets TOP = -1
+    void push(type x);      // "stack overflow" when full
+    void pop();             // "stack underflow" when empty
+    void display();         // "stack is empty" or the elements
+};
+```
+
+| State | Condition |
+| --- | --- |
+| Empty | `TOP == -1` |
+| Full | `TOP == 4` (capacity of 5) |
+
+---
+
+## 🔄 How It Works
+
+1. **Pick a type** from the main menu (1 to 5), or `6` to exit.
+2. **Choose** a new stack (`1`) or continue with the previous one (`2`).
+3. **Operate** on the stack with push, pop and display until you choose exit.
+4. **Return** to the main menu and switch to another type. Each type keeps its own stack.
+
+---
+
+## 📁 Project Structure
+
+```
+.
+├── main (2).cpp    # stack class template + menu-driven driver
+└── README.md
+```
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- A C++ compiler such as `g++` or `clang++` (C++11 or later)
+
+### Build
+
+```bash
+git clone https://github.com/syampullamar/Object-Oriented-Stack-Design-Using-C-Templates.git
+cd Object-Oriented-Stack-Design-Using-C-Templates
+g++ -Wall -Wextra -std=c++11 "main (2).cpp" -o stack
+```
+
+### Run
+
+```bash
+./stack
+```
+
+On Windows, run `stack.exe` instead.
+
+---
+
+## 🧪 Example Session
+
+```
+select one option
+1)int stack 2)char stack 3)float stack 4)double stack 5)string stack 6)exit
+1
+enter 1 for new stack 2)previous stack
+1
+select one option
+1)push 2)pop 3)display stack 4)exit
+1
+enter int to push
+10
+1
+enter int to push
+20
+3
+10 20
+2
+3
+10
+2
+2
+stack underflow
+4
+```
+
+**Messages you may see**
+
+| Message | Meaning |
+| --- | --- |
+| `stack overflow` | You tried to push onto a full stack (5 elements) |
+| `stack underflow` | You tried to pop from an empty stack |
+| `stack is empty` | You tried to display an empty stack |
+| `enter valid option` | The menu choice wasn't recognised |
+
+---
+
+## 🗺️ Roadmap
+
+- [ ] Make the capacity a template parameter (`template<class T, int N>`)
+- [ ] Add `peek()`, `isEmpty()` and `isFull()`
+- [ ] Return the popped value instead of only removing it
+- [ ] Validate non-numeric input at the menus
+- [ ] Merge the five per-type handlers into one function template
+- [ ] Move the class into `stack.h` and keep `main.cpp` for the driver
+
+---
+
+**Built by [Syam Prasad Pullamar](https://github.com/syampullamar)**
+
